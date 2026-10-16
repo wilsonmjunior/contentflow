@@ -33,6 +33,9 @@ contextBridge.exposeInMainWorld(
       openFolder: () => ipcRenderer.invoke("contentflow:diagnostics:open"),
       export: () => ipcRenderer.invoke("contentflow:diagnostics:export"),
     }),
+    filesystem: Object.freeze({
+      selectDirectory: () => ipcRenderer.invoke("contentflow:filesystem:select-directory"),
+    }),
   }),
 );
 

@@ -35,6 +35,16 @@ test("package 12.4 does not move the Method plugin interface to the Plugins page
   assert.match(pluginsRouteSource, /<InstallPluginDialog onInstalled=\{refresh\} \/>/);
 });
 
+test("plugin installation uses the desktop native folder picker", () => {
+  assert.match(pluginsRouteSource, /selectLocalDirectory/);
+  assert.match(pluginsRouteSource, /function PluginFolderPathField/);
+  assert.match(pluginsRouteSource, /Selecionar pasta/);
+  assert.match(pluginsRouteSource, /<PluginFolderPathField/);
+  const indexSource = readFileSync(new URL("./index.ts", import.meta.url), "utf8");
+  assert.match(indexSource, /\/api\/local\/select-directory/);
+  assert.match(indexSource, /selectLocalDirectory/);
+});
+
 test("package 12.4 keeps plugin UI declarative and owned by the core", () => {
   const rendererSource = readFileSync(
     new URL("../src/components/plugin-configuration-renderer.tsx", import.meta.url),

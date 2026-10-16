@@ -47,6 +47,16 @@ export type DesktopHumanTasksBridge = {
   subscribeNavigation(callback: (route: string) => void): () => void;
 };
 
+export type DirectorySelectionResult = {
+  status: "selected" | "cancelled" | "error" | "busy";
+  path?: string;
+  error?: string;
+};
+
+export type DesktopFilesystemBridge = {
+  selectDirectory(): Promise<DirectorySelectionResult>;
+};
+
 declare global {
   interface Window {
     contentflowDesktop?: {
@@ -56,6 +66,7 @@ declare global {
         openFolder(): Promise<{ status: "opened" | "error" }>;
         export(): Promise<{ status: "exported" | "cancelled" | "error" }>;
       };
+      filesystem?: DesktopFilesystemBridge;
     };
   }
 }
@@ -68,4 +79,31 @@ export function desktopHumanTasksBridge() {
 export function desktopUpdaterBridge() {
   if (typeof window === "undefined") return undefined;
   return window.contentflowDesktop?.updater;
+}
+
+export function desktopFilesystemBridge() {
+  if (typeof window === "undefined") return undefined;
+  return window.contentflowDesktop?.filesystem;
+}
+
+/** Prefer the Electron dialog; fall back to the local API used by `npm run dev`. */
+export async function selectLocalDirectory(): Promise<DirectorySelectionResult> {
+  const desktop = desktopFilesystemBridge();
+  if (desktop) return desktop.selectDirectory();
+  try {
+    const response = await fetch("/api/local/select-directory", { method: "POST" });
+    const result = (await response.json()) as DirectorySelectionResult;
+    if (!response.ok && !result.status) {
+      return {
+        status: "error",
+        error: "Não foi possível abrir o explorador de arquivos.",
+      };
+    }
+    return result;
+  } catch {
+    return {
+      status: "error",
+      error: "Não foi possível abrir o explorador de arquivos.",
+    };
+  }
 }

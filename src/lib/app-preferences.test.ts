@@ -22,6 +22,26 @@ test("support diagnostics controls and feedback are localized in three languages
   }
 });
 
+test("plugin folder picker controls are localized in three languages", () => {
+  for (const phrase of [
+    "Selecionar pasta",
+    "Selecione a pasta de um plugin ou da raiz do pacote extraído. O pacote instala vários plugins de uma vez, sem sobrescrever os já instalados.",
+    "Cole o caminho da pasta de um plugin ou da raiz do pacote extraído. O pacote instala vários plugins de uma vez, sem sobrescrever os já instalados.",
+    "Use o explorador de arquivos ou cole o caminho com ou sem aspas. O ContentFlow valida todo o conjunto e guarda uma cópia de cada plugin.",
+    "O ContentFlow aceita o caminho com ou sem aspas, valida todo o conjunto e guarda uma cópia de cada plugin.",
+    "Use o explorador de arquivos ou cole o caminho com aspas. Alterações na pasta aparecem ao atualizar, e desconectar não apaga seus arquivos.",
+    "O caminho pode ter aspas. Alterações na pasta aparecem ao atualizar, e desconectar não apaga seus arquivos.",
+    "Não foi possível abrir o explorador de arquivos",
+    "Tente novamente ou cole o caminho da pasta.",
+    "Já existe uma seleção de pasta em andamento",
+    "Feche o explorador aberto e tente novamente.",
+  ]) {
+    assert.equal(translate(phrase, "pt-BR"), phrase);
+    assert.notEqual(translate(phrase, "en"), phrase);
+    assert.notEqual(translate(phrase, "es"), phrase);
+  }
+});
+
 test("whole Method deletion and its confirmation are localized", () => {
   for (const phrase of [
     "Apagar Método",

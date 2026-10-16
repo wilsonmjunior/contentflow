@@ -3,6 +3,14 @@ import { createRequire } from "node:module";
 import path from "node:path";
 
 const require = createRequire(import.meta.url);
+
+if (process.platform !== "win32") {
+  console.log(
+    `Validação do binding Windows omitida em ${process.platform} (obrigatória só na montagem Windows).`,
+  );
+  process.exit(0);
+}
+
 const nativePackage = "@napi-rs/keyring-win32-x64-msvc";
 const packageJsonPath = require.resolve(`${nativePackage}/package.json`);
 const bindingPath = path.join(path.dirname(packageJsonPath), "keyring.win32-x64-msvc.node");

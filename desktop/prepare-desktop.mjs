@@ -1,4 +1,12 @@
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  chmodSync,
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  unlinkSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 import { build } from "esbuild";
 import { execFileSync } from "node:child_process";
@@ -7,6 +15,7 @@ const projectRoot = process.cwd();
 const runtimeDirectory = path.join(projectRoot, "desktop-runtime");
 const desktopBuildDirectory = path.join(projectRoot, "desktop-dist");
 const nodeMajor = Number(process.versions.node.split(".")[0]);
+const nodeBinaryName = process.platform === "win32" ? "node.exe" : "node";
 
 if (nodeMajor !== 26) {
   throw new Error(`A V0 precisa ser montada com Node 26; versão atual: ${process.versions.node}.`);
@@ -14,12 +23,18 @@ if (nodeMajor !== 26) {
 
 mkdirSync(runtimeDirectory, { recursive: true });
 mkdirSync(desktopBuildDirectory, { recursive: true });
-const bundledNodePath = path.join(runtimeDirectory, "node.exe");
+const bundledNodePath = path.join(runtimeDirectory, nodeBinaryName);
+const staleWindowsBinary = path.join(runtimeDirectory, "node.exe");
+if (process.platform !== "win32" && existsSync(staleWindowsBinary)) {
+  unlinkSync(staleWindowsBinary);
+}
 const bundledNodeVersion = existsSync(bundledNodePath)
   ? execFileSync(bundledNodePath, ["--version"], { encoding: "utf8" }).trim()
   : undefined;
-if (bundledNodeVersion !== `v${process.versions.node}`)
+if (bundledNodeVersion !== `v${process.versions.node}`) {
   copyFileSync(process.execPath, bundledNodePath);
+  if (process.platform !== "win32") chmodSync(bundledNodePath, 0o755);
+}
 
 const nodeLicenseCandidates = [
   path.join(path.dirname(process.execPath), "LICENSE"),

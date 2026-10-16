@@ -69,3 +69,24 @@ test("pendências humanas atualizam badge e notificações pelo preload isolado"
   assert.match(desktopPreload, /ipcRenderer\.send\(HUMAN_TASKS_UPDATE_CHANNEL/);
   assert.doesNotMatch(desktopPreload, /contextBridge\.exposeInMainWorld\([^)]*ipcRenderer/s);
 });
+
+test("o desktop expõe seletor nativo de pasta sem liberar ipcRenderer", () => {
+  assert.match(desktopMain, /configureDesktopFilesystem/);
+  assert.match(desktopMain, /contentflow:filesystem:select-directory/);
+  assert.match(desktopMain, /properties:\s*\["openDirectory"\]/);
+  assert.match(desktopPreload, /filesystem:\s*Object\.freeze/);
+  assert.match(desktopPreload, /selectDirectory:\s*\(\)\s*=>\s*ipcRenderer\.invoke\("contentflow:filesystem:select-directory"\)/);
+  assert.doesNotMatch(desktopPreload, /contextBridge\.exposeInMainWorld\([^)]*ipcRenderer/s);
+});
+
+test("o runtime Node empacotado usa o nome nativo da plataforma", () => {
+  assert.match(
+    desktopMain,
+    /nodeBinaryName\s*=\s*process\.platform\s*===\s*"win32"\s*\?\s*"node\.exe"\s*:\s*"node"/,
+  );
+  assert.match(desktopMain, /CONTENTFLOW_PLUGIN_NODE_EXECUTABLE\s*=\s*path\.join\(runtimeRoot,\s*nodeBinaryName\)/);
+  assert.equal(packageJson.build.mac?.identity, null);
+  assert.ok(packageJson.scripts["desktop:mac"]);
+  assert.equal(packageJson.dependencies["@napi-rs/keyring-win32-x64-msvc"], undefined);
+  assert.equal(packageJson.optionalDependencies["@napi-rs/keyring-win32-x64-msvc"], "1.3.0");
+});

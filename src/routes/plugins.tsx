@@ -12,6 +12,7 @@ import {
   Download,
   ExternalLink,
   FileText,
+  FolderOpen,
   FolderPlus,
   Image,
   KeyRound,
@@ -57,6 +58,7 @@ import {
   type UniversalProcess,
 } from "@/lib/domain";
 import { ECOSYSTEM_DOWNLOADS } from "@/lib/ecosystem-downloads";
+import { selectLocalDirectory } from "@/lib/desktop-updater";
 import { pluginCapabilityDescription, pluginCapabilityLabel } from "@/lib/plugin-capability-label";
 import type { PluginManifest } from "@/lib/plugin-contract";
 import { localizePluginManifest } from "@/lib/plugin-localization";
@@ -562,6 +564,74 @@ function PluginsPage() {
   );
 }
 
+function PluginFolderPathField({
+  id,
+  value,
+  onChange,
+  placeholder,
+  disabled,
+}: {
+  id?: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  disabled?: boolean;
+}) {
+  const [browsing, setBrowsing] = useState(false);
+
+  async function browse() {
+    if (browsing || disabled) return;
+    setBrowsing(true);
+    try {
+      const result = await selectLocalDirectory();
+      if (result.status === "selected" && result.path) onChange(result.path);
+      if (result.status === "busy") {
+        toast.error("Já existe uma seleção de pasta em andamento", {
+          description: "Feche o explorador aberto e tente novamente.",
+        });
+      }
+      if (result.status === "error") {
+        toast.error("Não foi possível abrir o explorador de arquivos", {
+          description: result.error ?? "Tente novamente ou cole o caminho da pasta.",
+        });
+      }
+    } catch {
+      toast.error("Não foi possível abrir o explorador de arquivos", {
+        description: "Tente novamente ou cole o caminho da pasta.",
+      });
+    } finally {
+      setBrowsing(false);
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-2 sm:flex-row">
+      <Input
+        id={id}
+        value={value}
+        placeholder={placeholder}
+        disabled={disabled}
+        onChange={(event) => onChange(event.target.value)}
+      />
+      <Button
+        type="button"
+        size="sm"
+        variant="outline"
+        className="shrink-0 gap-1.5"
+        disabled={disabled || browsing}
+        onClick={() => void browse()}
+      >
+        {browsing ? (
+          <LoaderCircle className="size-3.5 animate-spin" />
+        ) : (
+          <FolderOpen className="size-3.5" />
+        )}
+        Selecionar pasta
+      </Button>
+    </div>
+  );
+}
+
 function InstallPluginDialog({ onInstalled }: { onInstalled: () => Promise<void> }) {
   const [open, setOpen] = useState(false);
   const [folderPath, setFolderPath] = useState("");
@@ -623,8 +693,8 @@ function InstallPluginDialog({ onInstalled }: { onInstalled: () => Promise<void>
         <DialogHeader>
           <DialogTitle>Instalar plugin criado por você ou pela comunidade</DialogTitle>
           <DialogDescription>
-            Cole o caminho da pasta de um plugin ou da raiz do pacote extraído. O pacote instala
-            vários plugins de uma vez, sem sobrescrever os já instalados.
+            Selecione a pasta de um plugin ou da raiz do pacote extraído. O pacote instala vários
+            plugins de uma vez, sem sobrescrever os já instalados.
           </DialogDescription>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-2 rounded-lg bg-muted p-1">
@@ -645,16 +715,17 @@ function InstallPluginDialog({ onInstalled }: { onInstalled: () => Promise<void>
         </div>
         <div className="space-y-2">
           <Label htmlFor="plugin-folder-path">Pasta do plugin ou pacote</Label>
-          <Input
+          <PluginFolderPathField
             id="plugin-folder-path"
             value={folderPath}
             placeholder="C:\\Downloads\\ContentFlow-Plugins"
-            onChange={(event) => setFolderPath(event.target.value)}
+            disabled={installing}
+            onChange={setFolderPath}
           />
           <p className="text-[11px] leading-relaxed text-muted-foreground">
             {mode === "install"
-              ? "O ContentFlow aceita o caminho com ou sem aspas, valida todo o conjunto e guarda uma cópia de cada plugin."
-              : "O caminho pode ter aspas. Alterações na pasta aparecem ao atualizar, e desconectar não apaga seus arquivos."}
+              ? "Use o explorador de arquivos ou cole o caminho com ou sem aspas. O ContentFlow valida todo o conjunto e guarda uma cópia de cada plugin."
+              : "Use o explorador de arquivos ou cole o caminho com aspas. Alterações na pasta aparecem ao atualizar, e desconectar não apaga seus arquivos."}
           </p>
         </div>
         <Button disabled={installing || !folderPath.trim()} onClick={() => void install()}>
@@ -1900,16 +1971,17 @@ function UpdateInstalledPluginPanel({
           ? "Como alternativa, você ainda pode atualizar manualmente usando uma pasta."
           : "Se você recebeu uma versão por fora do catálogo, pode atualizá-la manualmente pela pasta."}
       </p>
-      <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-        <Input
+      <div className="mt-3 space-y-2">
+        <PluginFolderPathField
           value={folderPath}
           placeholder="C:\\Meus Plugins\\nova-versão"
-          onChange={(event) => setFolderPath(event.target.value)}
+          disabled={updating}
+          onChange={setFolderPath}
         />
         <Button
           size="sm"
           variant="outline"
-          className="shrink-0"
+          className="w-full gap-1.5 sm:w-auto"
           disabled={updating || !folderPath.trim()}
           onClick={() => void updatePlugin()}
         >
@@ -2074,12 +2146,13 @@ export function CommunityWorkspaceField({ pluginId }: { pluginId: string }) {
         Use uma pasta sua para arquivos persistentes e checkpoints. Deixe vazio para usar a pasta
         interna e isolada do ContentFlow.
       </p>
-      <div className="flex gap-2">
-        <Input
+      <div className="space-y-2">
+        <PluginFolderPathField
           id={`workspace-${pluginId}`}
           value={folderPath}
           placeholder="C:\\Meus Projetos\\ContentFlow"
-          onChange={(event) => setFolderPath(event.target.value)}
+          disabled={loading}
+          onChange={setFolderPath}
         />
         <Button size="sm" variant="outline" disabled={loading} onClick={() => void save()}>
           {loading && <LoaderCircle className="mr-1.5 size-3.5 animate-spin" />}

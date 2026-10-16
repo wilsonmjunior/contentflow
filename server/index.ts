@@ -4700,6 +4700,27 @@ function installPluginDirectories(pluginDirectories: string[]) {
   }
 }
 
+app.post("/api/local/select-directory", async (_request, response) => {
+  try {
+    const { selectLocalDirectory } = await import("./local-directory-dialog");
+    const selection = await selectLocalDirectory();
+    if (selection.status === "busy") {
+      response.status(409).json(selection);
+      return;
+    }
+    if (selection.status === "error") {
+      response.status(500).json(selection);
+      return;
+    }
+    response.json(selection);
+  } catch {
+    response.status(500).json({
+      status: "error",
+      error: "Não foi possível abrir o explorador de arquivos.",
+    });
+  }
+});
+
 app.post("/api/plugins/install-from-folder", (request, response) => {
   try {
     const requestedPath =

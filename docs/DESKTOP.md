@@ -98,7 +98,9 @@ Get-FileHash -Algorithm SHA256 `
 
 Antes de enviar a tag estável, atualize `package.json`, valide localmente, prepare as notas da versão e confirme que não existe workflow acionado pela tag. Depois do push, crie ou atualize a release diretamente pela API do GitHub com a credencial segura da sessão. Não reutilize uma versão ou tag já publicada. Builds beta devem usar outra política futura e não entram no canal `latest` da V1.
 
-O empacotamento inclui o runtime Node 26 privado em `resources/runtime/node.exe`. A API inicia em uma porta local aleatória e a janela Electron encaminha `/api` internamente, evitando portas fixas e conflitos com uma cópia de desenvolvimento.
+O empacotamento inclui o runtime Node 26 privado em `resources/runtime/` (`node.exe` no Windows, `node` no macOS). A API inicia em uma porta local aleatória e a janela Electron encaminha `/api` internamente, evitando portas fixas e conflitos com uma cópia de desenvolvimento.
+
+Para montar um `.app` local no macOS (desenvolvimento, sem assinatura): Node 26, Yarn e `./scripts/build-mac.sh` ou `yarn desktop:mac`. A release pública estável continua sendo a distribuição Windows.
 
 
 Para a 1.3.3, o criador dispensou suites e migração de instalações antigas e autorizou distribuir a base local atual. Essa exceção é específica desta publicação e não estabelece uma política geral de validação. A montagem permanece local, sem GitHub Actions, com integridade e disponibilidade pública verificadas.

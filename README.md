@@ -89,7 +89,26 @@ o mesmo consentimento, a mesma ativação e a mesma sandbox.
 
 ## Desenvolvimento local
 
-Requisitos: Node.js 26 e npm 10 ou superior.
+Requisitos: Node.js 26. No macOS use Yarn 1.22+; no Windows para releases oficiais use npm 10+.
+
+### macOS (Yarn)
+
+```sh
+git clone https://github.com/andremjr/contentflow.git
+cd contentflow
+nvm install 26 && nvm use 26   # se usar nvm
+yarn install
+yarn dev
+```
+
+Para abrir o app Electron empacotado localmente:
+
+```sh
+./scripts/build-mac.sh
+# ou: yarn desktop:mac
+```
+
+### Windows / npm
 
 ```sh
 git clone https://github.com/andremjr/contentflow.git
@@ -101,14 +120,15 @@ npm run dev
 Antes de enviar alterações:
 
 ```sh
-npm run check
+yarn run check   # macOS (use "run" — o Yarn 1 tem um "check" próprio)
+# ou: npm run check
 ```
 
 Para criar e validar um plugin:
 
 ```sh
-npm run plugin:kit -- create ./meu-plugin
-npm run plugin:kit -- check ./meu-plugin
+yarn plugin:kit create ./meu-plugin
+yarn plugin:kit check ./meu-plugin
 ```
 
 O desenvolvimento atual parte de Métodos/plugins e cenários verticais reais: observar resultado e invariantes, investigar falhas, corrigir na autoridade correta, acrescentar regressão quando aplicável e repetir o cenário. Veja o [processo de desenvolvimento](docs/DEVELOPMENT.md).

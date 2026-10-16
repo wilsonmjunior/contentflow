@@ -1513,6 +1513,53 @@ const PHRASES: Record<string, Translation> = {
   "Alterar capa": ["Change cover", "Cambiar portada"],
   Reutilizar: ["Reuse", "Reutilizar"],
   "Instalar plugin": ["Install plugin", "Instalar plugin"],
+  "Selecionar pasta": ["Select folder", "Seleccionar carpeta"],
+  "Selecione a pasta de um plugin ou da raiz do pacote extraído. O pacote instala vários plugins de uma vez, sem sobrescrever os já instalados.":
+    [
+      "Select a plugin folder or the extracted package root. The package installs several plugins at once without overwriting ones already installed.",
+      "Selecciona la carpeta de un plugin o la raíz del paquete extraído. El paquete instala varios plugins a la vez sin sobrescribir los ya instalados.",
+    ],
+  "Cole o caminho da pasta de um plugin ou da raiz do pacote extraído. O pacote instala vários plugins de uma vez, sem sobrescrever os já instalados.":
+    [
+      "Paste the path of a plugin folder or the extracted package root. The package installs several plugins at once without overwriting ones already installed.",
+      "Pega la ruta de la carpeta de un plugin o de la raíz del paquete extraído. El paquete instala varios plugins a la vez sin sobrescribir los ya instalados.",
+    ],
+  "Use o explorador de arquivos ou cole o caminho com ou sem aspas. O ContentFlow valida todo o conjunto e guarda uma cópia de cada plugin.":
+    [
+      "Use the file explorer or paste the path with or without quotes. ContentFlow validates the whole set and keeps a copy of each plugin.",
+      "Usa el explorador de archivos o pega la ruta con o sin comillas. ContentFlow valida todo el conjunto y guarda una copia de cada plugin.",
+    ],
+  "O ContentFlow aceita o caminho com ou sem aspas, valida todo o conjunto e guarda uma cópia de cada plugin.":
+    [
+      "ContentFlow accepts the path with or without quotes, validates the whole set, and keeps a copy of each plugin.",
+      "ContentFlow acepta la ruta con o sin comillas, valida todo el conjunto y guarda una copia de cada plugin.",
+    ],
+  "Use o explorador de arquivos ou cole o caminho com aspas. Alterações na pasta aparecem ao atualizar, e desconectar não apaga seus arquivos.":
+    [
+      "Use the file explorer or paste the path with quotes. Changes in the folder appear on refresh, and disconnecting does not delete your files.",
+      "Usa el explorador de archivos o pega la ruta con comillas. Los cambios en la carpeta aparecen al actualizar, y desconectar no borra tus archivos.",
+    ],
+  "O caminho pode ter aspas. Alterações na pasta aparecem ao atualizar, e desconectar não apaga seus arquivos.":
+    [
+      "The path may include quotes. Changes in the folder appear on refresh, and disconnecting does not delete your files.",
+      "La ruta puede incluir comillas. Los cambios en la carpeta aparecen al actualizar, y desconectar no borra tus archivos.",
+    ],
+  "Não foi possível abrir o explorador de arquivos": [
+    "Could not open the file explorer",
+    "No se pudo abrir el explorador de archivos",
+  ],
+  "Tente novamente ou cole o caminho da pasta.": [
+    "Try again or paste the folder path.",
+    "Inténtalo de nuevo o pega la ruta de la carpeta.",
+  ],
+  "Já existe uma seleção de pasta em andamento": [
+    "A folder selection is already in progress",
+    "Ya hay una selección de carpeta en curso",
+  ],
+  "Feche o explorador aberto e tente novamente.": [
+    "Close the open explorer and try again.",
+    "Cierra el explorador abierto e inténtalo de nuevo.",
+  ],
   "Verificar atualizações": ["Check for updates", "Buscar actualizaciones"],
   "Componentes externos": ["External components", "Componentes externos"],
   "O ContentFlow é instalado sem plugins. Baixe o pacote, extraia uma vez e instale todos de uma vez pela pasta raiz — ou informe a pasta de apenas um plugin.":

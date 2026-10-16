@@ -109,7 +109,8 @@ async function startDesktop() {
   process.env.CONTENTFLOW_PLUGIN_WORKER_DIR = app.isPackaged
     ? path.join(runtimeRoot, "workers")
     : path.join(appRoot, "server");
-  process.env.CONTENTFLOW_PLUGIN_NODE_EXECUTABLE = path.join(runtimeRoot, "node.exe");
+  const nodeBinaryName = process.platform === "win32" ? "node.exe" : "node";
+  process.env.CONTENTFLOW_PLUGIN_NODE_EXECUTABLE = path.join(runtimeRoot, nodeBinaryName);
   process.env.CONTENTFLOW_PLUGIN_NODE_MAJOR = "26";
   process.env.NODE_ENV = "production";
   process.env.CONTENTFLOW_SUPPORT_DIAGNOSTICS = "1";
@@ -205,9 +206,29 @@ async function startDesktop() {
     getWindow: () => mainWindow,
     supportLog: (event) => diagnostics.record(event),
   });
+  configureDesktopFilesystem();
   mainWindow.once("ready-to-show", () => mainWindow?.show());
   await mainWindow.loadURL(`${appOrigin}/dashboard`);
   if (!mainWindow.isVisible()) mainWindow.show();
+}
+
+function configureDesktopFilesystem() {
+  const authorized = (event) =>
+    mainWindow &&
+    event.sender === mainWindow.webContents &&
+    event.senderFrame === mainWindow.webContents.mainFrame;
+  ipcMain.handle("contentflow:filesystem:select-directory", async (event) => {
+    if (!authorized(event)) return { status: "error" };
+    try {
+      const selection = await dialog.showOpenDialog(mainWindow, {
+        properties: ["openDirectory"],
+      });
+      if (selection.canceled || !selection.filePaths?.[0]) return { status: "cancelled" };
+      return { status: "selected", path: selection.filePaths[0] };
+    } catch {
+      return { status: "error" };
+    }
+  });
 }
 
 function configureSupportDiagnostics(logDirectory) {
