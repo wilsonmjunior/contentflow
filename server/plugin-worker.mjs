@@ -16,6 +16,16 @@ function pathIsInside(root, candidate) {
   );
 }
 
+function ensureWritableResolvedPath(resolved, root) {
+  if (resolved === root) return;
+  mkdirSync(path.dirname(resolved), { recursive: true });
+  // Alias de perfil e outros segmentos sem extensão são usados como pastas
+  // (ex.: readiness em <alias>/.contentflow-profile-ready.json).
+  if (!path.extname(path.basename(resolved))) {
+    mkdirSync(resolved, { recursive: true });
+  }
+}
+
 function resolveAuthorizedPath(root, relativePath, label, verifyExistingPaths) {
   if (!relativePath || path.isAbsolute(relativePath)) throw new Error(`${label} inválido.`);
   const resolved = path.resolve(root, relativePath);
@@ -113,8 +123,9 @@ async function main() {
         "Caminho de trabalho",
         permissions.has("filesystem:read"),
       );
-      if (permissions.has("filesystem:write") && resolved !== envelope.sandbox.workspaceDirectory)
-        mkdirSync(path.dirname(resolved), { recursive: true });
+      if (permissions.has("filesystem:write")) {
+        ensureWritableResolvedPath(resolved, envelope.sandbox.workspaceDirectory);
+      }
       return resolved;
     },
     ...(envelope.sandbox.profileDirectory
@@ -129,11 +140,9 @@ async function main() {
               "Caminho de perfil",
               permissions.has("filesystem:read"),
             );
-            if (
-              permissions.has("filesystem:write") &&
-              resolved !== envelope.sandbox.profileDirectory
-            )
-              mkdirSync(path.dirname(resolved), { recursive: true });
+            if (permissions.has("filesystem:write")) {
+              ensureWritableResolvedPath(resolved, envelope.sandbox.profileDirectory);
+            }
             return resolved;
           },
         }

@@ -37,7 +37,7 @@ Correções locais adicionais em 03/10/2026: o núcleo materializa somente a por
 - A política `decideExecutionRecovery()` distingue reconciliação e intervenção, mas o caminho principal de erro de plugin ainda as materializa como falha com mensagem específica. `PluginJobStatus` não possui estados duráveis próprios para essas duas decisões. Reconciliação/retomada automática universal não está comprovada nem deve ser prometida.
 - Parte da coordenação permanece concentrada em `server/index.ts`; a existência do Core puro não significa isolamento completo de todos os caminhos de execução. Filas históricas e migrações operacionais ainda possuem tratamento específico.
 - Métodos v1/v2 e Plugin API v1 são inválidos. Preservação e migração recuperável de storage operacional não equivalem a adaptação desses contratos.
-- Automação depende de configuração local, login, cotas e comportamento do provedor. A extensão é carregada manualmente por perfil; headless universal não é uma capacidade garantida. Mudança de DOM, CAPTCHA ou desafio de segurança pode exigir intervenção.
+- Automação depende de configuração local, login, cotas e comportamento do provedor. A Browser Bridge é instalada automaticamente pelo núcleo em cada sessão dedicada; headless universal não é uma capacidade garantida. Mudança de DOM, CAPTCHA ou desafio de segurança pode exigir intervenção.
 - Distribuição documentada: Windows x64. A versão portátil não se substitui automaticamente; o aviso do Windows pode ocorrer enquanto não houver assinatura digital comercial.
 
 ## Limites das evidências

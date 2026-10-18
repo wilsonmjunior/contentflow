@@ -2215,11 +2215,12 @@ const extensionContent = await readFile(
   "utf8",
 );
 assert.equal(extensionManifest.manifest_version, 3);
-assert.equal(extensionManifest.version, "0.5.0");
+assert.equal(extensionManifest.version, "0.5.1");
 assert.deepEqual(extensionManifest.host_permissions, [
   "https://chatgpt.com/*",
   "https://claude.ai/*",
   "https://gemini.google.com/*",
+  "https://aistudio.google.com/*",
   "https://grok.com/*",
   "https://flow.google.com/*",
   "https://labs.google/*",

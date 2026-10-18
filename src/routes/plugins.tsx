@@ -1535,7 +1535,7 @@ function PluginProfilesPanel({ plugin }: { plugin: DiscoveredPlugin }) {
       description: [
         plugin.manifest.profileSetup?.description,
         t(
-          "A janela continuará aberta. Instale ou atualize a extensão, faça login e feche o navegador quando terminar.",
+          "A janela continuará aberta. Faça login na conta e aguarde o ContentFlow confirmar. Só feche o navegador depois de ver Perfil pronto.",
         ),
       ]
         .filter(Boolean)
@@ -1569,7 +1569,7 @@ function PluginProfilesPanel({ plugin }: { plugin: DiscoveredPlugin }) {
         description: [
           error instanceof Error ? error.message : undefined,
           t(
-            "A janela permanecerá aberta para você corrigir a extensão ou o login. Feche o navegador quando terminar.",
+            "A janela permanecerá aberta para você corrigir o login. Feche o navegador quando terminar.",
           ),
         ]
           .filter(Boolean)
@@ -1633,8 +1633,9 @@ function PluginProfilesPanel({ plugin }: { plugin: DiscoveredPlugin }) {
           <div className="rounded-lg border border-border bg-background/60 p-3">
             <p className="text-[11px] font-semibold">Extensão persistente do navegador</p>
             <p className="mt-1 text-[10px] leading-relaxed text-muted-foreground">
-              Ao preparar uma conta, carregue esta pasta uma única vez em chrome://extensions. Ela
-              fica fora da pasta do código e não muda quando o aplicativo é atualizado ou renomeado.
+              O ContentFlow instala automaticamente esta extensão no Chrome dedicado ao preparar ou
+              executar. A pasta fica fora do código e permanece estável entre atualizações; use o
+              caminho abaixo só se precisar reparar a instalação manualmente.
             </p>
             <div className="mt-2 flex items-center gap-2">
               <code className="min-w-0 flex-1 truncate rounded bg-muted px-2 py-1.5 text-[10px]">

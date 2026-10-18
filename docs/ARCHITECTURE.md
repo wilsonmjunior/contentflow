@@ -143,12 +143,15 @@ Sua função principal é responder, em linguagem de usuário: **como a capabili
 
 O núcleo é responsável pela moldura, hierarquia, componentes acessíveis, validação e persistência. O plugin descreve declarativamente a semântica, os campos, as opções e as condições de visibilidade de sua capability; ele não injeta React, HTML ou uma tela própria. A especificação detalhada desta superfície está em [`docs/PLUGIN_INTERFACE.md`](PLUGIN_INTERFACE.md).
 
-No nível global, a navegação principal possui quatro áreas, nesta ordem:
+No nível global, a navegação principal possui cinco áreas, nesta ordem:
 
 - `/dashboard`: visão geral dos canais.
 - `/orchestrator`: criação e acompanhamento de produção para um ou vários Canais. O mesmo formulário atende tanto uma fila de um único Canal quanto uma produção multi-Canal.
 - `/methods`: Biblioteca de Métodos, derivada dos métodos salvos nos canais, com cards alternáveis por Método ou Canal, busca, capas opcionais, reutilização, importação e compartilhamento.
 - `/plugins`: Gerenciador de Plugins locais, responsável por descobrir e apresentar manifestos reais instalados no aplicativo.
+- `/script-studio`: editor audiovisual independente para rascunhos de roteiro, cenas e storyboard, com um submenu interno para o guia de estilos visuais e nichos de vídeo. O roteiro é salvo localmente e não se associa a um Projeto, Método ou Processo automaticamente; o guia é um catálogo de referência dentro da mesma página.
+
+O Studio é uma ferramenta complementar de edição no workspace. Ele não cria um Processo Universal nem altera as três interfaces de domínio descritas acima.
 
 A lista e a grade de Projetos permanecem no Canal. A criação de novas filas não é duplicada nessa visão: ela acontece no Orquestrador global, selecionando um ou mais Canais.
 
@@ -485,7 +488,7 @@ Uma capacidade de plugin pode ser internamente complexa e demorada. Ela pode pes
 
 Automações de navegador podem cadastrar vários perfis de conta explicitamente preparados. Os plugins que operam interfaces web podem usar uma única extensão companheira Manifest V3, distribuída fora do núcleo e compatível com o protocolo público da ponte. Transporte, autenticação de comandos, isolamento de aba e operações DOM limitadas podem ser compartilhados; seletores, estados, regras e validação de cada provedor permanecem no respectivo plugin externo. O núcleo não inclui extensão, navegador, seletores ou adapters de provedor.
 
-Na V1, a extensão companheira é instalada manualmente em cada perfil dedicado por **Carregar sem compactação**. O aplicativo disponibiliza os arquivos públicos da ponte em uma pasta estável de dados, separada do checkout e preservada entre atualizações, para que renomear ou mover o código-fonte não quebre os perfis. A preparação pode informar prontidão assim que login e ponte forem validados, mas nunca fecha automaticamente a instância interativa. Em cadastro, preparação ou reparo de perfil, o usuário instala ou atualiza a extensão, conclui o login e decide quando fechar o navegador; sucesso, incompatibilidade da ponte e falha de autenticação permanecem visíveis sem retirar essa superfície de correção. Ferramentas pessoais que o mantenedor use para preparar vários perfis da própria máquina são paralelas ao aplicativo, não são chamadas pelo núcleo ou pelos plugins.
+O núcleo disponibiliza os arquivos públicos da Browser Bridge em uma pasta estável de dados, separada do checkout e preservada entre atualizações, e instala a extensão automaticamente em cada Chrome dedicado que ele abre — via CDP `Extensions.loadUnpacked`, com `--load-extension` apenas como compatibilidade residual para Chromium/Chrome for Testing. O usuário não precisa carregar a pasta em `chrome://extensions` no fluxo normal; a instalação manual permanece só como reparo. A preparação pode informar prontidão assim que login e ponte forem validados, mas nunca fecha automaticamente a instância interativa: o usuário conclui o login e decide quando fechar o navegador. Sucesso, incompatibilidade da ponte e falha de autenticação permanecem visíveis sem retirar essa superfície de correção.
 
 A execução rotineira ocorre minimizada ou em background por comandos estruturados entre o handler, o service worker e o content script. Ela não depende de foco do Windows, teclado ou mouse do sistema e não deve trazer a janela para frente. Login, reautenticação e diagnóstico podem abrir uma superfície visível somente mediante ação explícita do usuário. Headless não é uma garantia universal da implementação atual; depende de compatibilidade e validação do cenário.
 
@@ -536,7 +539,6 @@ Uma falha de sondagem não comprova que a instância encerrou e não autoriza fe
 Plugins podem conservar uma aba própria após uma tarefa concluída, validando origem, contexto e prontidão na próxima invocação e iniciando a conversa exigida pelo Método. Uma aba pronta não concede reutilização do conteúdo de outro Projeto. Observers e sessões da Bridge são removidos ao terminar o job. Sinais de conclusão e sua confirmação pertencem ao plugin; o núcleo não reconhece seletores ou estados de chats.
 
 A interface pode receber notificações locais de revisão do estado persistido. A revisão SQLite continua canônica; a notificação transporta somente a revisão e leva à consulta do snapshot existente. Reconexão revalida o estado e a consulta periódica permanece como contingência.
-
 
 ### Catálogos independentes (1.3.3)
 

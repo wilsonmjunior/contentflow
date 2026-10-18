@@ -14,6 +14,4 @@ A versão `0.4.0` acrescenta o Vibes aos provedores já atendidos. Para jobs lon
 
 ## Instalação
 
-Consulte [INSTALAR.md](INSTALAR.md). Na V1, o usuário carrega manualmente esta pasta em cada perfil dedicado usando `chrome://extensions` → **Modo do desenvolvedor** → **Carregar sem compactação**.
-
-Scripts pessoais usados pelo mantenedor para preparar vários perfis de sua própria máquina ficam em `local-tools`, ignorados pelo Git, e não fazem parte do aplicativo ou da experiência dos usuários.
+Consulte [INSTALAR.md](INSTALAR.md). No fluxo normal, o ContentFlow instala esta pasta automaticamente no Chrome dedicado. A instalação manual em `chrome://extensions` existe apenas como reparo.

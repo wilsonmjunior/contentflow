@@ -1,0 +1,86 @@
+{
+  "executionId": "fixture-aistudio-speech",
+  "traceId": "fixture-aistudio-speech-trace",
+  "blockId": "fixture-generate-speech",
+  "capabilityId": "generate-speech-in-browser",
+  "attempt": 1,
+  "invocation": {
+    "mode": "start"
+  },
+  "configuration": {
+    "accountProfile": "default",
+    "model": "gemini-3.8-flash-tts",
+    "voice": "Kore",
+    "styleInstructions": "Calm and clear narration."
+  },
+  "settings": {
+    "diagnosticFixture": true
+  },
+  "inputs": {
+    "text": "Olá, este é um teste de narração no Google AI Studio."
+  },
+  "inputContract": [
+    {
+      "portKey": "text",
+      "label": "Texto para narrar",
+      "key": "text",
+      "required": true,
+      "shape": {
+        "kind": "content",
+        "family": "text",
+        "cardinality": "one",
+        "representation": "inline"
+      }
+    }
+  ],
+  "outputContract": [
+    {
+      "portKey": "audio",
+      "label": "Narração",
+      "key": "audio",
+      "required": true,
+      "shape": {
+        "kind": "content",
+        "family": "audio",
+        "cardinality": "one",
+        "representation": "artifact",
+        "formats": {
+          "mimeTypes": ["audio/wav"]
+        }
+      }
+    },
+    {
+      "portKey": "metadata",
+      "label": "Metadados da geração",
+      "key": "metadata",
+      "required": false,
+      "shape": {
+        "kind": "record",
+        "cardinality": "many",
+        "fields": []
+      }
+    }
+  ],
+  "context": {
+    "locale": "pt-BR",
+    "timeZone": "America/Sao_Paulo",
+    "channel": {
+      "id": "fixture-channel",
+      "name": "Canal de teste",
+      "language": "pt-BR",
+      "niche": "Testes"
+    },
+    "project": {
+      "id": "fixture-project",
+      "title": "Projeto de teste"
+    },
+    "processType": "narration",
+    "block": {
+      "type": "CRIAR",
+      "name": "Narrar roteiro",
+      "instructions": "Narração clara e pausada."
+    },
+    "previousProcessOutputs": [],
+    "previousBlockOutputs": []
+  }
+}

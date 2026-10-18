@@ -669,8 +669,10 @@ async function profileIsPrepared(path, name) {
   }
 }
 async function markProfilePrepared(path, name) {
+  const markerPath = profileMarkerPath(path);
+  await mkdir(dirname(markerPath), { recursive: true });
   await writeFile(
-    profileMarkerPath(path),
+    markerPath,
     JSON.stringify({
       provider: CHATGPT_HOST,
       profile: name,

@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
-import { readFile, rm, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { homedir, platform } from "node:os";
-import { basename, extname, join } from "node:path";
+import { basename, dirname, extname, join } from "node:path";
 import { attachContentFlowBridge } from "./browser-bridge-client.mjs";
 import { createBridgeDiagnostics } from "./bridge-diagnostics.mjs";
 
@@ -244,8 +244,10 @@ export async function profileIsPrepared(path, name) {
 }
 
 export async function markProfilePrepared(path, name) {
+  const markerPath = profileMarkerPath(path);
+  await mkdir(dirname(markerPath), { recursive: true });
   await writeFile(
-    profileMarkerPath(path),
+    markerPath,
     JSON.stringify({
       provider: HOST,
       profile: name,

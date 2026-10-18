@@ -27,6 +27,10 @@ export type BrowserSessionManagerDependencies = {
   reservePort: () => Promise<number>;
   browserVersion: (port: number) => Promise<string | undefined>;
   closeThroughCdp: (webSocketDebuggerUrl: string) => Promise<boolean>;
+  loadUnpackedExtension: (
+    webSocketDebuggerUrl: string,
+    extensionDirectory: string,
+  ) => Promise<string>;
   spawnChrome: typeof spawn;
   startupTimeoutMs: number;
   pollIntervalMs: number;
@@ -119,6 +123,76 @@ async function closeThroughCdp(webSocketDebuggerUrl: string) {
   });
 }
 
+async function loadUnpackedExtension(webSocketDebuggerUrl: string, extensionDirectory: string) {
+  if (typeof WebSocket !== "function") {
+    throw Object.assign(new Error("WebSocket indisponível para instalar a Browser Bridge."), {
+      code: "BRIDGE_MISSING",
+    });
+  }
+  const resolvedDirectory = path.resolve(extensionDirectory);
+  if (!existsSync(path.join(resolvedDirectory, "manifest.json"))) {
+    throw Object.assign(
+      new Error("A pasta da ContentFlow Browser Bridge não está disponível neste computador."),
+      { code: "BRIDGE_MISSING" },
+    );
+  }
+  return new Promise<string>((resolve, reject) => {
+    const socket = new WebSocket(webSocketDebuggerUrl);
+    const timeout = setTimeout(() => {
+      socket.close();
+      reject(
+        Object.assign(
+          new Error("Tempo esgotado ao instalar a ContentFlow Browser Bridge no Chrome."),
+          { code: "BRIDGE_MISSING" },
+        ),
+      );
+    }, 15_000);
+    timeout.unref();
+    socket.addEventListener("open", () =>
+      socket.send(
+        JSON.stringify({
+          id: 1,
+          method: "Extensions.loadUnpacked",
+          params: { path: resolvedDirectory },
+        }),
+      ),
+    );
+    socket.addEventListener("message", (event) => {
+      let response: { id?: number; error?: { message?: string }; result?: { id?: string } };
+      try {
+        response = JSON.parse(String(event.data));
+      } catch {
+        return;
+      }
+      if (response.id !== 1) return;
+      clearTimeout(timeout);
+      socket.close();
+      const extensionId = response.result?.id;
+      if (response.error || typeof extensionId !== "string" || !extensionId) {
+        reject(
+          Object.assign(
+            new Error(
+              response.error?.message ||
+                "Não foi possível instalar a ContentFlow Browser Bridge neste perfil do Chrome.",
+            ),
+            { code: "BRIDGE_MISSING" },
+          ),
+        );
+        return;
+      }
+      resolve(extensionId);
+    });
+    socket.addEventListener("error", () => {
+      clearTimeout(timeout);
+      reject(
+        Object.assign(new Error("Falha de CDP ao instalar a ContentFlow Browser Bridge."), {
+          code: "BRIDGE_MISSING",
+        }),
+      );
+    });
+  });
+}
+
 export class BrowserSessionManager {
   private readonly dependencies: BrowserSessionManagerDependencies;
   private readonly sessions = new Map<string, ManagedSession>();
@@ -131,6 +205,7 @@ export class BrowserSessionManager {
       reservePort: reserveLoopbackPort,
       browserVersion,
       closeThroughCdp,
+      loadUnpackedExtension,
       spawnChrome: spawn,
       // A managed profile can cold-start Chrome and its shared Bridge extension
       // together. Fifteen seconds was short enough to classify a slow but
@@ -166,6 +241,12 @@ export class BrowserSessionManager {
       const endpoint = await this.dependencies.browserVersion(existing.port);
       if (endpoint === existing.webSocketDebuggerUrl && !input.signal?.aborted) {
         existing.monitorCorrelation = input.monitorCorrelation;
+        if (input.browserBridgeDirectory) {
+          await this.dependencies.loadUnpackedExtension(
+            existing.webSocketDebuggerUrl,
+            input.browserBridgeDirectory,
+          );
+        }
         return existing;
       }
       existing.active = false;
@@ -219,7 +300,14 @@ export class BrowserSessionManager {
       "about:blank",
     ];
     if (input.browserBridgeDirectory) {
-      args.splice(args.length - 1, 0, `--load-extension=${input.browserBridgeDirectory}`);
+      // Branded Chrome ignores --load-extension; keep it for Chromium / Chrome for Testing.
+      // --enable-unsafe-extension-debugging unlocks Extensions.loadUnpacked over CDP.
+      args.splice(
+        args.length - 1,
+        0,
+        "--enable-unsafe-extension-debugging",
+        `--load-extension=${input.browserBridgeDirectory}`,
+      );
     }
     if (input.visible === false) {
       args.unshift(
@@ -254,6 +342,12 @@ export class BrowserSessionManager {
         if (child.exitCode !== null) throw new Error("O Chrome encerrou durante a inicialização.");
         const webSocketDebuggerUrl = await this.dependencies.browserVersion(port);
         if (webSocketDebuggerUrl) {
+          if (input.browserBridgeDirectory) {
+            await this.dependencies.loadUnpackedExtension(
+              webSocketDebuggerUrl,
+              input.browserBridgeDirectory,
+            );
+          }
           if (probe.enabled)
             probe.emit({
               kind: "instance.ready",

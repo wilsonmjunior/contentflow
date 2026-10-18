@@ -4453,7 +4453,7 @@ app.post("/api/plugins/:pluginId/profiles/:profileId/:action", async (request, r
       bridgeState,
       error:
         markerReady && bridgeState === "missing"
-          ? `A ContentFlow Browser Bridge não permaneceu instalada neste perfil. Em chrome://extensions, carregue uma única vez a pasta estável ${browserBridgeDirectory ?? "indicada na Central de Plugins"} e prepare novamente.`
+          ? `A ContentFlow Browser Bridge não permaneceu instalada neste perfil. Prepare novamente para o ContentFlow reinstalar a extensão automaticamente a partir de ${browserBridgeDirectory ?? "a pasta estável da Central de Plugins"}.`
           : undefined,
       message:
         result.status === "success" && typeof result.values.message === "string"
@@ -4552,7 +4552,7 @@ app.post(
         },
         error:
           markerReady && bridgeState === "missing"
-            ? `A ContentFlow Browser Bridge não permaneceu instalada neste perfil. Em chrome://extensions, carregue uma única vez a pasta estável ${browserBridgeDirectory ?? "indicada na Central de Plugins"} e prepare novamente.`
+            ? `A ContentFlow Browser Bridge não permaneceu instalada neste perfil. Prepare novamente para o ContentFlow reinstalar a extensão automaticamente a partir de ${browserBridgeDirectory ?? "a pasta estável da Central de Plugins"}.`
             : undefined,
         message:
           result.status === "success" && typeof result.values.message === "string"

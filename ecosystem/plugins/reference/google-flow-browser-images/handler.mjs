@@ -2,7 +2,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { copyFile, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { homedir, platform } from "node:os";
-import { basename, join } from "node:path";
+import { basename, dirname, join } from "node:path";
 import { createBridgeDiagnostics } from "./bridge-diagnostics.mjs";
 import {
   rememberMedia,
@@ -1384,6 +1384,7 @@ async function markProfilePrepared(runtimeOrPath, name, extensionIdentity) {
   if (!readinessPath) {
     throw codedError("INVALID_CONFIGURATION", "Não foi possível resolver o readiness do perfil.");
   }
+  await mkdir(dirname(readinessPath), { recursive: true });
   await writeFile(
     readinessPath,
     JSON.stringify({

@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import {
   Blocks,
   BookOpen,
+  Clapperboard,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -105,6 +106,12 @@ export function AppSidebar() {
               active={pathname === "/methods" || pathname === "/metodos"}
             />
             <NavItem icon={Plug} label="Plugins" to="/plugins" active={pathname === "/plugins"} />
+            <NavItem
+              icon={Clapperboard}
+              label="Roteiro audiovisual"
+              to="/script-studio"
+              active={pathname === "/script-studio"}
+            />
             <SectionLabel>Seus canais</SectionLabel>
             {channels.map((item) => (
               <NavItem

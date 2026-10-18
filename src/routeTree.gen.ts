@@ -15,6 +15,7 @@ import { Route as MethodsRouteImport } from './routes/methods'
 import { Route as MetodosRouteImport } from './routes/metodos'
 import { Route as OrchestratorRouteImport } from './routes/orchestrator'
 import { Route as PluginsRouteImport } from './routes/plugins'
+import { Route as ScriptStudioRouteImport } from './routes/script-studio'
 import { Route as ChannelChannelIdRouteImport } from './routes/channel.$channelId'
 import { Route as ProjectProjectIdRouteImport } from './routes/project.$projectId'
 import { Route as ChannelChannelIdIndexRouteImport } from './routes/channel.$channelId.index'
@@ -58,6 +59,11 @@ const OrchestratorRoute = OrchestratorRouteImport.update({
 const PluginsRoute = PluginsRouteImport.update({
   id: '/plugins',
   path: '/plugins',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScriptStudioRoute = ScriptStudioRouteImport.update({
+  id: '/script-studio',
+  path: '/script-studio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChannelChannelIdRoute = ChannelChannelIdRouteImport.update({
@@ -140,6 +146,7 @@ export interface FileRoutesByFullPath {
   '/metodos': typeof MetodosRoute
   '/orchestrator': typeof OrchestratorRoute
   '/plugins': typeof PluginsRoute
+  '/script-studio': typeof ScriptStudioRoute
   '/channel/$channelId': typeof ChannelChannelIdRouteWithChildren
   '/project/$projectId': typeof ProjectProjectIdRouteWithChildren
   '/channel/$channelId/library': typeof ChannelChannelIdLibraryRoute
@@ -162,6 +169,7 @@ export interface FileRoutesByTo {
   '/metodos': typeof MetodosRoute
   '/orchestrator': typeof OrchestratorRoute
   '/plugins': typeof PluginsRoute
+  '/script-studio': typeof ScriptStudioRoute
   '/channel/$channelId/library': typeof ChannelChannelIdLibraryRoute
   '/channel/$channelId/methods': typeof ChannelChannelIdMethodsRoute
   '/project/$projectId/assets': typeof ProjectProjectIdAssetsRoute
@@ -183,6 +191,7 @@ export interface FileRoutesById {
   '/metodos': typeof MetodosRoute
   '/orchestrator': typeof OrchestratorRoute
   '/plugins': typeof PluginsRoute
+  '/script-studio': typeof ScriptStudioRoute
   '/channel/$channelId': typeof ChannelChannelIdRouteWithChildren
   '/project/$projectId': typeof ProjectProjectIdRouteWithChildren
   '/channel/$channelId/library': typeof ChannelChannelIdLibraryRoute
@@ -207,6 +216,7 @@ export interface FileRouteTypes {
     | '/metodos'
     | '/orchestrator'
     | '/plugins'
+    | '/script-studio'
     | '/channel/$channelId'
     | '/project/$projectId'
     | '/channel/$channelId/library'
@@ -229,6 +239,7 @@ export interface FileRouteTypes {
     | '/metodos'
     | '/orchestrator'
     | '/plugins'
+    | '/script-studio'
     | '/channel/$channelId/library'
     | '/channel/$channelId/methods'
     | '/project/$projectId/assets'
@@ -249,6 +260,7 @@ export interface FileRouteTypes {
     | '/metodos'
     | '/orchestrator'
     | '/plugins'
+    | '/script-studio'
     | '/channel/$channelId'
     | '/project/$projectId'
     | '/channel/$channelId/library'
@@ -272,6 +284,7 @@ export interface RootRouteChildren {
   MetodosRoute: typeof MetodosRoute
   OrchestratorRoute: typeof OrchestratorRoute
   PluginsRoute: typeof PluginsRoute
+  ScriptStudioRoute: typeof ScriptStudioRoute
   ChannelChannelIdRoute: typeof ChannelChannelIdRouteWithChildren
   ProjectProjectIdRoute: typeof ProjectProjectIdRouteWithChildren
 }
@@ -318,6 +331,13 @@ declare module '@tanstack/react-router' {
       path: '/plugins'
       fullPath: '/plugins'
       preLoaderRoute: typeof PluginsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/script-studio': {
+      id: '/script-studio'
+      path: '/script-studio'
+      fullPath: '/script-studio'
+      preLoaderRoute: typeof ScriptStudioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/channel/$channelId': {
@@ -470,6 +490,7 @@ const rootRouteChildren: RootRouteChildren = {
   MetodosRoute: MetodosRoute,
   OrchestratorRoute: OrchestratorRoute,
   PluginsRoute: PluginsRoute,
+  ScriptStudioRoute: ScriptStudioRoute,
   ChannelChannelIdRoute: ChannelChannelIdRouteWithChildren,
   ProjectProjectIdRoute: ProjectProjectIdRouteWithChildren,
 }

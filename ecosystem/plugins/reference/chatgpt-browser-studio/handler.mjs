@@ -1,9 +1,9 @@
 import { jsonTextInstruction, jsonTextValue, jsonTextValues } from "./json-text-items.mjs";
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
-import { readFile, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { homedir, platform } from "node:os";
-import { basename, extname, join } from "node:path";
+import { basename, dirname, extname, join } from "node:path";
 import { attachContentFlowBridge } from "./browser-bridge-client.mjs";
 import { createBridgeDiagnostics } from "./bridge-diagnostics.mjs";
 
@@ -849,6 +849,7 @@ async function markProfilePrepared(runtimeOrPath, name) {
   if (!readinessPath) {
     throw codedError("INVALID_CONFIGURATION", "Não foi possível resolver o readiness do perfil.");
   }
+  await mkdir(dirname(readinessPath), { recursive: true });
   await writeFile(
     readinessPath,
     JSON.stringify({

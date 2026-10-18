@@ -1,5 +1,6 @@
 const BRIDGE_ID = "com.contentflow.browser-bridge";
 const FLOW_PLUGIN_ID = "local.contentflow.google-flow-batch-images";
+const AISTUDIO_SPEECH_PLUGIN_ID = "local.contentflow.aistudio-speech-browser";
 const VIBES_PLUGIN_ID = "local.contentflow.vibes-browser-studio";
 const PROTOCOL_VERSION = 2;
 const PROTOCOL_RANGE = Object.freeze({ min: 2, max: 2 });
@@ -66,6 +67,10 @@ const PLUGIN_POLICIES = Object.freeze({
   "local.contentflow.gemini-browser-studio": policy(
     ["https://gemini.google.com"],
     ["https://gemini.google.com/*"],
+  ),
+  [AISTUDIO_SPEECH_PLUGIN_ID]: policy(
+    ["https://aistudio.google.com"],
+    ["https://aistudio.google.com/*"],
   ),
   [FLOW_PLUGIN_ID]: policy(
     ["https://flow.google.com", "https://labs.google"],

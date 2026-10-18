@@ -27,12 +27,17 @@ function fakeChild() {
 test("abre uma única sessão com a porta reservada e devolve somente o endpoint efêmero", async () => {
   const child = fakeChild();
   const launches: Array<{ executable: string; args: string[] }> = [];
+  const loaded: Array<{ url: string; directory: string }> = [];
   let probes = 0;
   const manager = new BrowserSessionManager({
     reservePort: async () => 45678,
     browserVersion: async () =>
       ++probes >= 2 ? "ws://127.0.0.1:45678/devtools/browser/test" : undefined,
     closeThroughCdp: async () => true,
+    loadUnpackedExtension: async (url, directory) => {
+      loaded.push({ url, directory });
+      return "bridge-extension-id";
+    },
     spawnChrome: ((executable: string, args: readonly string[]) => {
       launches.push({ executable, args: [...args] });
       return child;
@@ -53,8 +58,52 @@ test("abre uma única sessão com a porta reservada e devolve somente o endpoint
   assert.equal(launches.length, 1);
   assert.ok(launches[0]!.args.includes("--remote-debugging-port=45678"));
   assert.ok(launches[0]!.args.includes("--user-data-dir=C:\\contentflow-test-profile"));
+  assert.ok(launches[0]!.args.includes("--enable-unsafe-extension-debugging"));
   assert.ok(launches[0]!.args.includes("--load-extension=C:\\contentflow-browser-bridge"));
   assert.ok(launches[0]!.args.includes("--start-minimized"));
+  assert.deepEqual(loaded, [
+    {
+      url: "ws://127.0.0.1:45678/devtools/browser/test",
+      directory: "C:\\contentflow-browser-bridge",
+    },
+  ]);
+});
+
+test("reinstala a Browser Bridge ao reutilizar uma sessão física já aberta", async () => {
+  const child = fakeChild();
+  const loaded: string[] = [];
+  let probes = 0;
+  const manager = new BrowserSessionManager({
+    reservePort: async () => 45688,
+    browserVersion: async () =>
+      ++probes >= 1 ? "ws://127.0.0.1:45688/devtools/browser/test" : undefined,
+    loadUnpackedExtension: async (_url, directory) => {
+      loaded.push(directory);
+      return "bridge-extension-id";
+    },
+    spawnChrome: (() => child) as never,
+    startupTimeoutMs: 1_000,
+    pollIntervalMs: 1,
+  });
+
+  const first = await manager.open({
+    profileDirectory: "C:\\contentflow-reuse-profile",
+    browserBridgeDirectory: "C:\\contentflow-browser-bridge",
+    chromeExecutable: process.execPath,
+  });
+  await manager.release(first);
+  const second = await manager.open({
+    profileDirectory: "C:\\contentflow-reuse-profile",
+    browserBridgeDirectory: "C:\\contentflow-browser-bridge",
+    chromeExecutable: process.execPath,
+  });
+
+  assert.equal(second, first);
+  assert.deepEqual(loaded, [
+    "C:\\contentflow-browser-bridge",
+    "C:\\contentflow-browser-bridge",
+  ]);
+  await manager.dispose();
 });
 
 test("permite a inicialização fria da Bridge sem reduzir o polling", () => {
@@ -124,6 +173,7 @@ function poolFixture(overrides = {}) {
     reservePort: async () => 47000 + launches,
     browserVersion: async (port) =>
       children.get(port)?.exitCode === null ? `ws://localhost:${port}` : undefined,
+    loadUnpackedExtension: async () => "bridge-extension-id",
     spawnChrome: ((_executable: string, args: string[]) => {
       const child = fakeChild();
       launches++;

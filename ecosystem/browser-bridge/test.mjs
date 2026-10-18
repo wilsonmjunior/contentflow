@@ -6,7 +6,7 @@ import { runInNewContext } from "node:vm";
 const extensionManifest = JSON.parse(
   readFileSync(new URL("./manifest.json", import.meta.url), "utf8"),
 );
-assert.equal(extensionManifest.version, "0.5.0");
+assert.equal(extensionManifest.version, "0.5.1");
 
 export async function testExtensionBridge(source) {
   const storage = {};
@@ -246,7 +246,7 @@ export async function testExtensionBridge(source) {
   assert.equal(bridge.identity.protocolVersion, 2);
   assert.equal(bridge.identity.protocol.min, 2);
   assert.equal(bridge.identity.protocol.max, 2);
-  assert.equal(bridge.identity.bridgeVersion, "0.5.0");
+  assert.equal(bridge.identity.bridgeVersion, "0.5.1");
   assert.deepEqual(Array.from(bridge.identity.capabilities), [
     "idempotent-replay.v1",
     "lifecycle-events.v1",
@@ -283,7 +283,7 @@ export async function testExtensionBridge(source) {
     "condition-observer.v1",
     "reload.v1",
   ]);
-  assert.equal(negotiated.bridgeVersion, "0.5.0");
+  assert.equal(negotiated.bridgeVersion, "0.5.1");
   assert.equal(
     (
       await bridge.connect({
@@ -641,6 +641,7 @@ export async function testExtensionBridge(source) {
     ["local.contentflow.chatgpt-browser-studio", "https://chatgpt.com/"],
     ["local.contentflow.claude-browser-text", "https://claude.ai/new"],
     ["local.contentflow.gemini-browser-studio", "https://gemini.google.com/app"],
+    ["local.contentflow.aistudio-speech-browser", "https://aistudio.google.com/generate-speech"],
     ["local.contentflow.grok-browser-studio", "https://grok.com/"],
     ["local.contentflow.meta-ai-browser-studio", "https://www.meta.ai/"],
     ["local.contentflow.mai-playground-browser", "https://playground.microsoft.ai/chat"],

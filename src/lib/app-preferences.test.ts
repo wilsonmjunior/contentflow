@@ -22,6 +22,91 @@ test("support diagnostics controls and feedback are localized in three languages
   }
 });
 
+test("audiovisual studio submenu and visual guide controls are localized", () => {
+  for (const phrase of [
+    "Seções do estúdio",
+    "Roteiro",
+    "Guia de estilo visual",
+    "Diretório visual & estratégia de conteúdo",
+    "Linguagens visuais para vídeo & YouTube",
+    "Buscar estilo, nicho ou referência...",
+    "Nicho do YouTube:",
+    "Todos os nichos",
+    "Todos os estilos",
+    "Filtrar família visual",
+    "Nicho recomendado",
+    "Ver guia",
+    "Nenhum estilo encontrado.",
+    "Guia rápido de combinação",
+    "Matriz estratégica: nicho × linguagem visual",
+    "Personalidade visual",
+    "Temas e títulos sugeridos",
+    "Canais de referência",
+    "Subnichos",
+    "Elementos visuais",
+    "Estilo de áudio",
+    "Prompt visual de referência",
+    "Paleta cromática",
+    "Animação & Motion",
+    "Creator Economy",
+    "Creator Economy & Digital",
+    "Cinema & Live-Action",
+    "Retrô & Nostalgia",
+    "Conceitual & IA",
+    "Conceitual & IA Generativa",
+  ]) {
+    assert.equal(translate(phrase, "pt-BR"), phrase);
+    assert.notEqual(translate(phrase, "en"), phrase);
+    assert.notEqual(translate(phrase, "es"), phrase);
+  }
+});
+
+test("camera direction guide controls are localized", () => {
+  for (const phrase of [
+    "Seções do guia visual",
+    "Estilos visuais",
+    "Câmera e direção",
+    "Direção de plano",
+    "Monte a direção do seu plano",
+    "Sujeito ou personagem",
+    "Ação principal",
+    "Ambiente",
+    "Enquadramento",
+    "Movimento",
+    "Luz e cor",
+    "Tom visual",
+    "Continuidade, áudio ou restrição (opcional)",
+    "Prompt do plano",
+    "Vocabulário visual",
+    "Movimentos, enquadramentos e recursos de imagem",
+    "Buscar movimento, luz ou enquadramento...",
+    "Ex.: manter o mesmo figurino; sem diálogo; passos sobre folhas molhadas.",
+    "Prompt do plano",
+    "Da campanha ao documentário",
+    "Um fluxo de produção, do argumento à montagem",
+    "Os controles e nomes de menus podem mudar conforme modelo, conta, plano, plataforma e região. Confirme os recursos disponíveis na documentação atual do Flow.",
+    "Princípios de direção",
+    "Copiar termo",
+    "Termo copiado",
+    "Não foi possível copiar o termo.",
+    "Os termos com barra são atalhos de direção visual dos guias consultados. Use-os como vocabulário para descrever a tomada; não são comandos oficiais nem garantem uma função específica no Google Flow.",
+    "Da campanha ao documentário",
+    "Um fluxo de produção, do argumento à montagem",
+    "Câmera e movimento",
+    "Ângulo e operação",
+    "Movimento e ação",
+    "Luz e atmosfera",
+    "Composição",
+    "Efeitos ópticos",
+    "Foco e profundidade",
+    "Cor e gradação",
+  ]) {
+    assert.equal(translate(phrase, "pt-BR"), phrase);
+    assert.notEqual(translate(phrase, "en"), phrase);
+    assert.notEqual(translate(phrase, "es"), phrase);
+  }
+});
+
 test("plugin folder picker controls are localized in three languages", () => {
   for (const phrase of [
     "Selecionar pasta",
@@ -169,6 +254,106 @@ test("translates the sidebar project CTA", () => {
   );
 });
 
+test("Script Studio interface is localized in Portuguese, English and Spanish", () => {
+  const phrases = [
+    "Roteiro audiovisual",
+    "Planeje cenas, imagem, locução e trilha em um roteiro visual.",
+    "Título do roteiro",
+    "Tema ou episódio",
+    "Duração do roteiro",
+    "Palavras de locução",
+    "Tempo estimado de locução",
+    "Salvamento local automático",
+    "Nova cena",
+    "Recalcular timecodes",
+    "Modelos",
+    "Vídeo-ensaio e documentário",
+    "Ritmo documental com cenas e B-roll",
+    "Animação infantil",
+    "Cenas lúdicas com locução e efeitos",
+    "Manual do roteiro audiovisual",
+    "Manual do roteirista audiovisual",
+    "Três colunas com tempo",
+    "Duas colunas",
+    "Storyboard visual",
+    "Exportar",
+    "Imprimir ou salvar em PDF",
+    "Copiar como Markdown",
+    "Baixar backup JSON",
+    "Importar backup JSON",
+    "Storyboard sequencial",
+    "Visualize cada cena com imagem de referência, duração e direção de áudio.",
+    "Cena",
+    "Editar imagem de referência",
+    "Vídeo e enquadramento",
+    "Sem descrição visual.",
+    "Áudio e locução",
+    "Sem áudio registrado.",
+    "Prompt de IA",
+    "Subir cena",
+    "Descer cena",
+    "Tempo",
+    "Vídeo, cena e enquadramento",
+    "Áudio, narração, trilha e efeitos",
+    "Início",
+    "Fim",
+    "PG",
+    "PM",
+    "Plano detalhe",
+    "Motion 2D/3D",
+    "GC / Lettering",
+    "Narrador",
+    "Locutor",
+    "Trilha",
+    "Efeito sonoro",
+    "Descreva o que aparece na cena, o enquadramento e a ação...",
+    "Escreva a narração, a trilha e os efeitos sonoros...",
+    "Gerar prompt de IA",
+    "Duplicar cena",
+    "Excluir cena",
+    "Use os marcadores rápidos nas caixas de texto para estruturar a escrita técnica.",
+    "Prompt generativo de IA",
+    "Prompt para imagem",
+    "Prompt para vídeo",
+    "Prompt otimizado em inglês técnico",
+    "Fechar",
+    "Copiar prompt",
+    "Prompt copiado.",
+    "Boas práticas para roteiro em colunas, storyboard e geração visual com IA.",
+    "Sincronia entre imagem e áudio",
+    "Roteiro e storyboard",
+    "Prompts visuais",
+    "Imagem de referência",
+    "Cole o endereço público de uma imagem para esta cena.",
+    "Cancelar",
+    "Salvar imagem",
+    "Não foi possível carregar o roteiro salvo.",
+    "Não foi possível salvar o roteiro neste dispositivo.",
+    "O roteiro deve conter pelo menos uma cena.",
+    "Timecodes recalculados com base na locução.",
+    "Modelo carregado.",
+    "Roteiro copiado em Markdown.",
+    "Não foi possível copiar o roteiro.",
+    "Roteiro importado.",
+    "Arquivo de roteiro inválido.",
+  ];
+  const sameEnglish = new Set(["Close-up"]);
+  const sameSpanish = new Set(["Exportar", "Prompt de IA", "Narrador", "Locutor", "Cancelar"]);
+  for (const phrase of phrases) {
+    assert.equal(translate(phrase, "pt-BR"), phrase);
+    if (!sameEnglish.has(phrase))
+      assert.notEqual(
+        translate(phrase, "en"),
+        phrase,
+        `${phrase} must have an English translation`,
+      );
+    else assert.ok(translate(phrase, "en"));
+    if (!sameSpanish.has(phrase))
+      assert.notEqual(translate(phrase, "es"), phrase, `${phrase} must have a Spanish translation`);
+    else assert.ok(translate(phrase, "es"));
+  }
+});
+
 test("translates process reordering controls and feedback in all interface languages", () => {
   const phrases = [
     "Reordenar processo",
@@ -304,10 +489,10 @@ test("translates shared browser profile linking UI from package 7.4", () => {
 test("translates the user-controlled profile preparation window lifecycle", () => {
   assert.equal(
     translate(
-      "A janela continuará aberta. Instale ou atualize a extensão, faça login e feche o navegador quando terminar.",
+      "A janela continuará aberta. Faça login na conta e aguarde o ContentFlow confirmar. Só feche o navegador depois de ver Perfil pronto.",
       "en",
     ),
-    "The window will remain open. Install or update the extension, sign in, and close the browser when you are finished.",
+    "The window will remain open. Sign in to the account and wait for ContentFlow to confirm. Close the browser only after you see Profile ready.",
   );
   assert.equal(
     translate("O perfil está pronto. Feche o navegador quando terminar a configuração.", "es"),
@@ -315,10 +500,17 @@ test("translates the user-controlled profile preparation window lifecycle", () =
   );
   assert.equal(
     translate(
-      "A janela permanecerá aberta para você corrigir a extensão ou o login. Feche o navegador quando terminar.",
+      "A janela permanecerá aberta para você corrigir o login. Feche o navegador quando terminar.",
       "en",
     ),
-    "The window will remain open so you can fix the extension or sign-in. Close the browser when you are finished.",
+    "The window will remain open so you can fix the sign-in. Close the browser when you are finished.",
+  );
+  assert.equal(
+    translate(
+      "O ContentFlow instala automaticamente esta extensão no Chrome dedicado ao preparar ou executar. A pasta fica fora do código e permanece estável entre atualizações; use o caminho abaixo só se precisar reparar a instalação manualmente.",
+      "en",
+    ),
+    "ContentFlow installs this extension automatically in the dedicated Chrome when you prepare or run. The folder stays outside the code and remains stable across updates; use the path below only if you need to repair the install manually.",
   );
 });
 
