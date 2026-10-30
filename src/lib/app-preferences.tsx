@@ -46,6 +46,14 @@ type Translation = [english: string, spanish: string];
 
 const PHRASES: Record<string, Translation> = {
   "Roteiro audiovisual": ["Audiovisual script", "Guion audiovisual"],
+  "Guia de sincronização de narração e timestamps": [
+    "Narration and timestamp synchronization guide",
+    "Guía de sincronización de narración y marcas de tiempo",
+  ],
+  "Áudio primeiro, marcação de tempo e geração de cenas": [
+    "Audio first, timing, and scene generation",
+    "Primero el audio, tiempos y generación de escenas",
+  ],
   "Seções do estúdio": ["Studio sections", "Secciones del estudio"],
   Exibindo: ["Showing", "Mostrando"],
   Roteiro: ["Script", "Guion"],

@@ -25,6 +25,8 @@ test("support diagnostics controls and feedback are localized in three languages
 test("audiovisual studio submenu and visual guide controls are localized", () => {
   for (const phrase of [
     "Seções do estúdio",
+    "Guia de sincronização de narração e timestamps",
+    "Áudio primeiro, marcação de tempo e geração de cenas",
     "Roteiro",
     "Guia de estilo visual",
     "Diretório visual & estratégia de conteúdo",

@@ -306,5 +306,12 @@
       ],
       "artifactName": "ContentFlow-${version}-${arch}.${ext}"
     }
+  },
+  "allowScripts": {
+    "better-sqlite3@13.0.3": true,
+    "electron@41.10.7": true,
+    "electron-winstaller@5.4.0": true,
+    "esbuild@0.28.2": true,
+    "fsevents@2.3.3": true
   }
 }

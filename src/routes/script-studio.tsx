@@ -24,6 +24,7 @@ import {
   Upload,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
+import { NarrationSyncGuide } from "@/components/script-studio/narration-sync-guide";
 import { TopBar } from "@/components/top-bar";
 import { Button } from "@/components/ui/button";
 import {
@@ -419,6 +420,8 @@ function ScriptStudioPage() {
                 </span>
               </div>
             </section>
+
+            <NarrationSyncGuide t={t} />
 
             <div
               data-script-studio-actions
